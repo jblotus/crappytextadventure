@@ -18,8 +18,8 @@
                
         scriptFragments = {
           intro: 'you wake up tired again. what are you going to do now?',
-          "got out of bed": 'I smell smoke coming from the kitchen. Should I take a look?',
-          "walked into the kitchen" : 'It looks like someone left the oven on again. I can see smoke coming from the over doors. Now what?'
+          "got out of bed": 'You smell smoke coming from the kitchen. Maybe you should take a look?',
+          "walked into the kitchen" : 'It looks like someone left the oven on again. You can see smoke coming from inside the door. Now what?'
         }
         
         commands = {
@@ -27,12 +27,27 @@
             currentScriptFragment = scriptFragments["got out of bed"];
             return 'ok im up';
           },
-          yes: function() {
+          yes: function(command) {
             if (currentScriptFragment === scriptFragments["got out of bed"]) {
               currentScriptFragment = scriptFragments["walked into the kitchen"];
-              return 'i am now moving into the kitchen. wow';
+              return 'you are now moving into the kitchen. a chore indeed.';
             }
-            return 'yes what?';
+            return command + ' what?';
+          },
+          no: function() {
+            if (currentScriptFragment === scriptFragments["got out of bed"]) {              
+              return 'so..i guess we will just burn then. no, seriously go check it out.';
+            }
+            return "no...no what exactly?";
+          },
+          move: function() {
+            return "you need to move somewhere..but where..hmmm";
+          },
+          doNothing: function() {
+            if (currentScriptFragment === scriptFragments["walked into the kitchen"]) {              
+              return "don't you want to know why the smoke is coming out of there?";
+            }
+            return 'fine then. we can just do nothing.';
           }
         }
         
@@ -70,11 +85,20 @@
         }
         
         parseCommand = function(command) {
-          if (command === 'get out of bed' || command === 'get up' || command === 'wake up') {
+          if (command === 'get out of bed' || command === 'get up' || command === 'wake up', command === 'wake') {
             return commands.getOutOfBed();
           }          
-          if (command === 'yes') {
-            return commands.yes();
+          if (command === 'yes' || command === 'ok') {
+            return commands.yes(command);
+          }
+          if (command === 'no') {
+            return commands.no();
+          }
+          if (command === 'move') {
+            return commands.move();
+          }
+          if (command === 'nothing') {
+            return commands.doNothing();
           }
           return "i'm not making any sense";
         }
