@@ -48,6 +48,12 @@
               return "don't you want to know why the smoke is coming out of there?";
             }
             return 'fine then. we can just do nothing.';
+          },
+          open: function() {
+            if (currentScriptFragment === scriptFragments["walked into the kitchen"]) {
+              currentScriptFragment = scriptFragments['intro'];
+              return "you open the oven door and a wave of flame washes over your entire body.";
+            }
           }
         }
         
@@ -84,8 +90,8 @@
           promptText.innerHTML = response + "\n\n" + currentScriptFragment;
         }
         
-        parseCommand = function(command) {
-          if (command === 'get out of bed' || command === 'get up' || command === 'wake up', command === 'wake') {
+        parseCommand = function(command) {          
+          if (command === 'get out of bed' || command === 'get up' || command === 'wake up' || command === 'wake') {
             return commands.getOutOfBed();
           }          
           if (command === 'yes' || command === 'ok') {
@@ -96,6 +102,9 @@
           }
           if (command === 'move') {
             return commands.move();
+          }
+          if (command === 'open' || command === 'open door' || command === "open the door" || command === "open oven", command === 'open it') {
+            return commands.open();
           }
           if (command === 'nothing') {
             return commands.doNothing();
