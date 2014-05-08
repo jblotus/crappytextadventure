@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>A Crappy Text Adventure</title>
+  </head>
+  <body>
+    <script>
+      (function() {
+        "use strict";
+        
+        var promptText,
+            currentScriptFragment,
+            scriptFragments = {},
+            commandArea,
+            commands = {},
+            inputEl,
+            parseCommand,
+            updateCommandResponse;
+               
+        scriptFragments = {
+          intro: 'you wake up tired again. what are you going to do now?',
+          "got out of bed": 'I smell smoke coming from the kitchen. Should I take a look?',
+          "walked into the kitchen" : 'It looks like someone left the oven on again. I can see smoke coming from the over doors. Now what?'
+        }
+        
+        commands = {
+          getOutOfBed: function() {
+            currentScriptFragment = scriptFragments["got out of bed"];
+            return 'ok im up';
+          },
+          yes: function() {
+            if (currentScriptFragment === scriptFragments["got out of bed"]) {
+              currentScriptFragment = scriptFragments["walked into the kitchen"];
+              return 'i am now moving into the kitchen. wow';
+            }
+            return 'yes what?';
+          }
+        }
+        
+        currentScriptFragment = scriptFragments.intro;
+        
+        //build the stage
+        promptText = document.createElement('pre');        
+        promptText.appendChild(document.createTextNode(currentScriptFragment));
+        
+        document.body.appendChild(promptText);
+        
+        //build the command area
+        commandArea = document.createElement('form');
+        inputEl = document.createElement('input');
+        commandArea.appendChild(inputEl);
+        
+        document.body.appendChild(commandArea);
+        
+        //events
+        commandArea.addEventListener('submit', function(e) {
+          var command = inputEl.value,
+              response;
+          
+          e.preventDefault();
+          
+          response = parseCommand(command);
+          
+          updateCommandResponse(response);
+          
+          inputEl.value = '';
+        });
+        
+        updateCommandResponse = function(response) {
+          promptText.innerHTML = response + "\n\n" + currentScriptFragment;
+        }
+        
+        parseCommand = function(command) {
+          if (command === 'get out of bed' || command === 'get up' || command === 'wake up') {
+            return commands.getOutOfBed();
+          }          
+          if (command === 'yes') {
+            return commands.yes();
+          }
+          return "i'm not making any sense";
+        }
+      }());
+  </script>
+  </body>
+</html>
